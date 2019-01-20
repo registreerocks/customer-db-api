@@ -3,7 +3,7 @@ from pymongo import MongoClient, ReturnDocument
 
 from .authentication import requires_auth, requires_scope
 
-client = MongoClient('mongodb://localhost:27017/')
+client = MongoClient('mongodb://mongodb:27017/')
 db = client.customer_database
 customer_details = db.customer_details
 invoice_details = db.invoice_details
