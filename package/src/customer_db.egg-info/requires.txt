@@ -1,0 +1,6 @@
+flask_cors
+mock
+pymongo
+pytest
+python-dotenv
+python-jose-cryptodome
