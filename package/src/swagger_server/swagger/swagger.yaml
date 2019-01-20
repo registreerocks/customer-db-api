@@ -311,10 +311,10 @@ components:
       xml:
         name: Parameter
 
-#   securitySchemes:
-#     bearerAuth:
-#       type: http
-#       scheme: bearer
-#       bearerFormat: JWT
-# security:
-#   - bearerAuth: []
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
