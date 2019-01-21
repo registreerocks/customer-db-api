@@ -2,3 +2,5 @@ venv
 playground
 .ipynb_checkpoints
 .vscode
+customer_db.egg-info/
+__pycache__

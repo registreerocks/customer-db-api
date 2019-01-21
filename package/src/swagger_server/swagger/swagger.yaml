@@ -76,13 +76,13 @@ paths:
         description: name of data field and new value
         required: true
 
-  /invoice/post:
+  /payment/post:
     post:
       tags:
-        - invoice
-      summary: add new invoice details to database
+        - payment
+      summary: add new payment details to database
       description: ''
-      operationId: swagger_server.controllers.customer_db_functions.post_invoice
+      operationId: swagger_server.controllers.customer_db_functions.post_payment
       responses:
         '200':
           description: OK
@@ -92,20 +92,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Invoice'
-        description: invoice details
+              $ref: '#/components/schemas/Payment'
+        description: payment details
         required: true
-  /invoice/get:
+  /payment/get:
     get:
       tags:
-        - invoice
-      summary: retrieve invoice details
+        - payment
+      summary: retrieve payment details
       description: ''
-      operationId: swagger_server.controllers.customer_db_functions.get_invoice
+      operationId: swagger_server.controllers.customer_db_functions.get_payment
       parameters:
         - in: query
           name: id
-          description: invoice detail id
+          description: payment detail id
           required: true
           schema:
             type: string
@@ -116,17 +116,38 @@ paths:
           description: Authentication error
         '409':
           description: Conflict
-  /invoice/put/{id}:
+  /payment/get_by_customer:
+    get:
+      tags:
+        - payment
+      summary: retrieve payment details by customer
+      description: ''
+      operationId: swagger_server.controllers.customer_db_functions.get_payment_by_customer
+      parameters:
+        - in: query
+          name: customer_id
+          description: customer id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Authentication error
+        '409':
+          description: Conflict
+  /payment/put/{id}:
     put:
       tags:
-      - invoice
-      summary: update invoice details
+      - payment
+      summary: update payment details
       description: ''
-      operationId: swagger_server.controllers.customer_db_functions.put_invoice
+      operationId: swagger_server.controllers.customer_db_functions.put_payment
       parameters:
       - name: id
         in: path
-        description: customer id
+        description: payment id
         required: true
         schema:
           type: string
@@ -145,13 +166,13 @@ paths:
         description: name of data field and new value
         required: true
 
-  /payment/post:
+  /invoices/post:
     post:
       tags:
-        - payment
-      summary: add new payment status to database
+        - invoices
+      summary: add new invoice to database
       description: ''
-      operationId: swagger_server.controllers.customer_db_functions.post_payment
+      operationId: swagger_server.controllers.customer_db_functions.post_invoice
       responses:
         '200':
           description: OK
@@ -161,20 +182,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Payment'
-        description: payment status
+              $ref: '#/components/schemas/Invoices'
+        description: invoice
         required: true
-  /payment/get:
+  /invoices/get:
     get:
       tags:
-        - payment
-      summary: retrieve payment status
+        - invoices
+      summary: retrieve invoice
       description: ''
-      operationId: swagger_server.controllers.customer_db_functions.get_payment
+      operationId: swagger_server.controllers.customer_db_functions.get_invoice
       parameters:
         - in: query
           name: id
-          description: payment status id
+          description: invoice id
           required: true
           schema:
             type: string
@@ -185,17 +206,80 @@ paths:
           description: Authentication error
         '409':
           description: Conflict
-  /payment/put/{id}:
+  /invoices/get_by_customer:
+    get:
+      tags:
+        - invoices
+      summary: retrieve invoices by customer
+      description: ''
+      operationId: swagger_server.controllers.customer_db_functions.get_invoices_by_customer
+      parameters:
+        - in: query
+          name: customer_id
+          description: customer id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Authentication error
+        '409':
+          description: Conflict
+  /invoices/get_by_customer_unpaid:
+    get:
+      tags:
+        - invoices
+      summary: retrieve invoices that are marked as unpaid - by customer
+      description: ''
+      operationId: swagger_server.controllers.customer_db_functions.get_invoices_by_customer_open
+      parameters:
+        - in: query
+          name: customer_id
+          description: customer id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Authentication error
+        '409':
+            description: Conflict
+  /invoices/get_by_customer_paid:
+    get:
+      tags:
+        - invoices
+      summary: retrieve invoices that are marked as paid - by customer
+      description: ''
+      operationId: swagger_server.controllers.customer_db_functions.get_invoices_by_customer_paid
+      parameters:
+        - in: query
+          name: customer_id
+          description: customer id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Authentication error
+        '409':
+          description: Conflict
+  /invoices/put/{id}:
     put:
       tags:
-      - payment
-      summary: update payment status
+      - invoices
+      summary: update invoice
       description: ''
-      operationId: swagger_server.controllers.customer_db_functions.put_payment
+      operationId: swagger_server.controllers.customer_db_functions.put_invoice
       parameters:
       - name: id
         in: path
-        description: customer id
+        description: invoice id
         required: true
         schema:
           type: string
@@ -223,11 +307,7 @@ components:
       properties:
         name:
           type: string
-        billing_type:
-          type: string
-        billing_id:
-          type: string
-        currency:
+        payment_type:
           type: string
         contact:
           type: object
@@ -245,7 +325,7 @@ components:
                   type: string
       xml:
         name: Customer
-    Invoice:
+    Payment:
       type: object
       properties:
         customer_id:
@@ -278,7 +358,7 @@ components:
               type: string
       xml:
         name: Invoice
-    Payment:
+    Invoices:
       type: object
       properties:
         customer_id:
