@@ -43,6 +43,8 @@ paths:
       responses:
         '200':
           description: OK
+        '400':
+          description: Invalid input
         '401':
           description: Authentication error
         '409':
@@ -64,6 +66,8 @@ paths:
       responses:
         '200':
           description: OK
+        '400':
+          description: Invalid input
         '401':
           description: Authentication error
         '409':
@@ -112,6 +116,8 @@ paths:
       responses:
         '200':
           description: OK
+        '400':
+          description: Invalid input
         '401':
           description: Authentication error
         '409':
@@ -154,6 +160,8 @@ paths:
       responses:
         '200':
           description: OK
+        '400':
+          description: Invalid input
         '401':
           description: Authentication error
         '409':
@@ -202,6 +210,8 @@ paths:
       responses:
         '200':
           description: OK
+        '400':
+          description: Invalid input
         '401':
           description: Authentication error
         '409':
@@ -286,6 +296,8 @@ paths:
       responses:
         '200':
           description: OK
+        '400':
+          description: Invalid input
         '401':
           description: Authentication error
         '409':

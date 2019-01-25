@@ -2,6 +2,7 @@ from bson import ObjectId
 from pymongo import MongoClient, ReturnDocument
 
 from .authentication import requires_auth, requires_scope
+from .helpers import check_id
 
 client = MongoClient('mongodb://mongodb:27017/')
 db = client.customer_database
@@ -16,6 +17,7 @@ def post_customer(body):
 
 @requires_auth
 @requires_scope('registree', 'recruiter')
+@check_id
 def get_customer(id):
     result = customer_details.find_one({'_id': ObjectId(id)})
     if result:
@@ -26,6 +28,7 @@ def get_customer(id):
 
 @requires_auth
 @requires_scope('registree')
+@check_id
 def put_customer(id, body):
     result = customer_details.find_one_and_update(
                 {'_id': ObjectId(id)},
@@ -45,6 +48,7 @@ def post_payment(body):
 
 @requires_auth
 @requires_scope('registree', 'recruiter')
+@check_id
 def get_payment(id):
     result = payment_details.find_one({'_id': ObjectId(id)})
     if result:
@@ -65,6 +69,7 @@ def get_payment_by_customer(customer_id):
 
 @requires_auth
 @requires_scope('registree')
+@check_id
 def put_payment(id, body):
     result = payment_details.find_one_and_update(
                 {'_id': ObjectId(id)},
@@ -84,6 +89,7 @@ def post_invoice(body):
 
 @requires_auth
 @requires_scope('registree', 'recruiter')
+@check_id
 def get_invoice(id):
     result = invoices.find_one({'_id': ObjectId(id)})
     if result:
@@ -131,6 +137,7 @@ def get_invoices_by_customer_open(customer_id):
 
 @requires_auth
 @requires_scope('registree')
+@check_id
 def put_invoice(id, body):
     result = invoices.find_one_and_update(
                 {'_id': ObjectId(id)},
