@@ -38,4 +38,6 @@ services:
 networks: 
   backbone:
     driver: bridge
+  apiaggregator_interconnector:
+    external: true
     
