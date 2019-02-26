@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "8004:8000"
     environment:
       AUTH0_DOMAIN: "registree.eu.auth0.com"
       API_IDENTIFIER: "https://registree.rocks/apis"
@@ -31,4 +31,3 @@ networks:
     driver: bridge
   apiaggregator_interconnector:
     external: true
-    
