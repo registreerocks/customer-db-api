@@ -4,11 +4,11 @@ from pymongo import MongoClient, ReturnDocument
 from .authentication import requires_auth, requires_scope
 from .helpers import check_id
 
-client = MongoClient('mongodb://mongodb:27017/')
-db = client.customer_database
-customer_details = db.customer_details
-payment_details = db.payment_details
-invoices = db.invoices
+CLIENT = MongoClient('mongodb://mongodb:27017/')
+DB = CLIENT.database
+customer_details = DB.customer_details
+payment_details = DB.payment_details
+invoices = DB.invoices
 
 @requires_auth
 @requires_scope('registree')
