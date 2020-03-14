@@ -2,7 +2,7 @@ from bson import ObjectId
 from pymongo import MongoClient, ReturnDocument
 
 from .authentication import requires_auth, requires_scope
-from .helpers import _stringify_object_id, check_id
+from .helpers import _calculate_quote, _stringify_object_id, check_id
 
 CLIENT = MongoClient('mongodb://mongodb:27017/')
 DB = CLIENT.database
@@ -86,6 +86,8 @@ def put_payment(id, body):
 @requires_auth
 @requires_scope('registree')
 def post_invoice(body):
+    price = _calculate_quote(body.query_id)
+    body.payment.price = price
     return str(invoices.insert_one(body).inserted_id)
 
 @requires_auth
