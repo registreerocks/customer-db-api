@@ -2,13 +2,14 @@ from bson import ObjectId
 from pymongo import MongoClient, ReturnDocument
 
 from .authentication import requires_auth, requires_scope
-from .helpers import check_id
+from .helpers import _stringify_object_id, check_id
 
 CLIENT = MongoClient('mongodb://mongodb:27017/')
 DB = CLIENT.database
 customer_details = DB.customer_details
 payment_details = DB.payment_details
 invoices = DB.invoices
+query_details = DB.query_db
 
 @requires_auth
 @requires_scope('registree')
@@ -150,9 +151,10 @@ def put_invoice(id, body):
     else:
         return {'ERROR': 'No matching data found.'}, 409
 
-def _stringify_object_id(result):
-    stringified_result = []
-    for element in result:
-        element['_id'] = str(element['_id'])
-        stringified_result.append(element)
-    return stringified_result
+@requires_auth
+@requires_scope('recruiter')
+@check_id
+def post_query(body):
+    body['_id'] = ObjectId(body['id'])
+    del body['id']
+    return str(query_details.insert_one(body).inserted_id)
