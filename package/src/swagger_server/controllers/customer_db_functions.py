@@ -160,3 +160,20 @@ def post_query(body):
     body['_id'] = ObjectId(body['id'])
     del body['id']
     return str(query_details.insert_one(body).inserted_id)
+
+@requires_auth
+@requires_scope('recruiter')
+@check_id
+def expand_query(body):
+    body['_id'] = ObjectId(body['id'])
+    del body['id']
+    result = query_details.find_one_and_replace(
+                {'_id': body['_id']},
+                body,
+                return_document=ReturnDocument.AFTER
+            )
+    if result:
+        result['_id'] = str(result['_id'])
+        return result
+    else:
+        return {'ERROR': 'No matching data found.'}, 409

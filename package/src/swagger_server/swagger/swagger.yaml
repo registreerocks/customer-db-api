@@ -328,6 +328,25 @@ paths:
               $ref: '#/components/schemas/Query'
         description: query object
         required: true
+  /query/expand:
+    post:
+      tags:
+        - query
+      summary: store expanded query details
+      description: ''
+      operationId: swagger_server.controllers.customer_db_functions.expand_query
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Authentication error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Query'
+        description: query object
+        required: true
 
 servers:
   - url: 'http://localhost:8000/v0.1'
