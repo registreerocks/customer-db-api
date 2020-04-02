@@ -1,8 +1,12 @@
+import math
+from os import environ as env
+
 from bson import ObjectId
 from pymongo import MongoClient, ReturnDocument
 
 from .authentication import requires_auth, requires_scope
-from .helpers import _calculate_quote, _stringify_object_id, check_id
+from .helpers import _stringify_object_id, check_id
+from .quotes import _calculate_quote
 
 CLIENT = MongoClient('mongodb://mongodb:27017/')
 DB = CLIENT.database
@@ -86,7 +90,8 @@ def put_payment(id, body):
 @requires_auth
 @requires_scope('registree')
 def post_invoice(body):
-    price = _calculate_quote(body.query_id)
+    # dummy data
+    price = _calculate_quote(100)
     body.payment.price = price
     return str(invoices.insert_one(body).inserted_id)
 
@@ -177,3 +182,32 @@ def expand_query(body):
         return result
     else:
         return {'ERROR': 'No matching data found.'}, 409
+
+@requires_auth
+@requires_scope('recruiter')
+@check_id
+def get_quote(n):
+    return [
+        {
+            'string': 'Number of students to be contacted given search criteria',
+            'value': n
+        },
+        {
+            'string': 'Total cost of query given a 5% RSVP rate',
+            'value': _calculate_quote(math.floor(0.05 * n))
+        },
+        {
+            'string': 'Total cost of query given a 10% RSVP rate',
+            'value': _calculate_quote(math.floor(0.1 * n))
+        },
+        {
+            'string': 'Total cost of query given a 20% RSVP rate',
+            'value': _calculate_quote(math.floor(0.2 * n))
+        }
+    ]
+
+@requires_auth
+@requires_scope('registree')
+@check_id
+def get_price(n):
+    return _calculate_quote(n)

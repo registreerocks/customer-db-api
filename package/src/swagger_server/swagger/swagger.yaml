@@ -347,6 +347,44 @@ paths:
               $ref: '#/components/schemas/Query'
         description: query object
         required: true
+  /query/get_quote:
+    get:
+      tags:
+        - query
+      summary: returns array of price overview
+      description: ''
+      operationId: swagger_server.controllers.customer_db_functions.get_quote
+      parameters:
+        - in: query
+          name: n
+          description: number of students in query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Authentication error
+  /query/get_price:
+    get:
+      tags:
+        - query
+      summary: returns array of price overview
+      description: ''
+      operationId: swagger_server.controllers.customer_db_functions.get_price
+      parameters:
+        - in: query
+          name: n
+          description: number of RSVPs
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Authentication error      
 
 servers:
   - url: 'http://localhost:8000/v0.1'

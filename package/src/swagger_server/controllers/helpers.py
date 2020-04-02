@@ -17,6 +17,3 @@ def _stringify_object_id(result):
         element['_id'] = str(element['_id'])
         stringified_result.append(element)
     return stringified_result
-
-def _calculate_quote(query_id):
-    return 4000
