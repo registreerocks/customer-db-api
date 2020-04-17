@@ -8,7 +8,11 @@ from .authentication import requires_auth, requires_scope
 from .helpers import _stringify_object_id, check_id
 from .quotes import _calculate_quote
 
-CLIENT = MongoClient('mongodb://mongodb:27017/')
+CLIENT = MongoClient(
+  'mongodb://mongodb:27017/', 
+  username=env.get('MONGO_USERNAME'), 
+  password=env.get('MONGO_PASSWORD')
+  )
 DB = CLIENT.database
 customer_details = DB.customer_details
 payment_details = DB.payment_details

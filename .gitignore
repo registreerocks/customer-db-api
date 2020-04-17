@@ -5,3 +5,4 @@ playground
 .vscode
 customer_db.egg-info/
 __pycache__
+*.env
