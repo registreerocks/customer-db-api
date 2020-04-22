@@ -3,8 +3,8 @@ from os import environ as env
 
 from bson import ObjectId
 from pymongo import MongoClient, ReturnDocument
+from registree_auth import requires_auth, requires_scope
 
-from .authentication import requires_auth, requires_scope
 from .helpers import _stringify_object_id, check_id
 from .quotes import _calculate_quote
 
