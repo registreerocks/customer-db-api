@@ -83,8 +83,7 @@ workflows:
       - build:
           filters:
             branches:
-              only:
-                - dev
+              only: dev
       - deploy-stage:
           requires:
             - build
@@ -97,7 +96,7 @@ workflows:
               only: master
             tags:
               only: /^[0-9].*/
-      - release-prod:
+      - deploy-prod:
           requires:
             - build-prod
           filters:
