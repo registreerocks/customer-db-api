@@ -93,7 +93,7 @@ workflows:
       - build-prod:
           filters:
             branches:
-              only: master
+              ignore: /.*/
             tags:
               only: /^[0-9].*/
       - deploy-prod:
@@ -101,6 +101,6 @@ workflows:
             - build-prod
           filters:
             branches:
-              only: master
+              ignore: /.*/
             tags:
               only: /^[0-9].*/
