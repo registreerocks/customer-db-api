@@ -80,100 +80,6 @@ paths:
         description: name of data field and new value
         required: true
 
-  /payment/post:
-    post:
-      tags:
-        - payment
-      summary: add new payment details to database
-      description: ''
-      operationId: swagger_server.controllers.customer_db_functions.post_payment
-      responses:
-        '200':
-          description: OK
-        '401':
-          description: Authentication error
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Payment'
-        description: payment details
-        required: true
-  /payment/get:
-    get:
-      tags:
-        - payment
-      summary: retrieve payment details
-      description: ''
-      operationId: swagger_server.controllers.customer_db_functions.get_payment
-      parameters:
-        - in: query
-          name: id
-          description: payment detail id
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-        '400':
-          description: Invalid input
-        '401':
-          description: Authentication error
-        '409':
-          description: Conflict
-  /payment/get_by_customer:
-    get:
-      tags:
-        - payment
-      summary: retrieve payment details by customer
-      description: ''
-      operationId: swagger_server.controllers.customer_db_functions.get_payment_by_customer
-      parameters:
-        - in: query
-          name: customer_id
-          description: customer id
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-        '401':
-          description: Authentication error
-        '409':
-          description: Conflict
-  /payment/put/{id}:
-    put:
-      tags:
-      - payment
-      summary: update payment details
-      description: ''
-      operationId: swagger_server.controllers.customer_db_functions.put_payment
-      parameters:
-      - name: id
-        in: path
-        description: payment id
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          description: OK
-        '400':
-          description: Invalid input
-        '401':
-          description: Authentication error
-        '409':
-          description: Conflict
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Parameter'
-        description: name of data field and new value
-        required: true
-
   /invoices/post:
     post:
       tags:
@@ -357,8 +263,23 @@ components:
       properties:
         name:
           type: string
-        payment_type:
+        description:
           type: string
+        billing_address:
+          type: object
+          properties:
+            line_1:
+              type: string
+            line_2:
+              type: string
+            city:
+              type: string
+            province:
+              type: string
+            zip:
+              type: string
+            country:
+              type: string
         contact:
           type: object
           properties:
@@ -366,48 +287,10 @@ components:
               type: string
             email:
               type: string
-            phone:
-              type: object
-              properties:
-                number: 
-                  type: string
-                country_code:
-                  type: string
+        vat:
+          type: string
       xml:
         name: Customer
-    Payment:
-      type: object
-      properties:
-        customer_id:
-          type: string
-        address:
-          type: object
-          properties:
-            name:
-              type: string
-            street:
-              type: string
-            number:
-              type: string
-            city:
-              type: string
-            zip:
-              type: string
-            state:
-              type: string
-            country: 
-              type: string
-        payment:
-          type: object
-          properties:
-            currency: 
-              type: string
-            frequency:
-              type: string
-            frequency_interval:
-              type: string
-      xml:
-        name: Invoice
     Invoices:
       type: object
       properties:
@@ -415,14 +298,11 @@ components:
           type: string
         query_id:
           type: string
-        payment:
-          type: object
-          properties:
-            currency:
-              type: string
-            complete:
-              type: boolean
-              default: false
+        rsvp:
+          type: string
+        complete:
+          type: boolean
+          default: false
       xml:
         name: Payment
     Parameter:
