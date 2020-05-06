@@ -7,7 +7,7 @@ tags:
   - name: Customer DB
     description: ''
 paths:
-  /customer/post:
+  /customer:
     post:
       tags:
         - customer
@@ -26,7 +26,7 @@ paths:
               $ref: '#/components/schemas/Customer'
         description: customer details
         required: true
-  /customer/get:
+  /customer/{id}:
     get:
       tags:
         - customer
@@ -34,7 +34,7 @@ paths:
       description: ''
       operationId: swagger_server.controllers.customer_db_functions.get_customer
       parameters:
-        - in: query
+        - in: path
           name: id
           description: customer id
           required: true
@@ -49,7 +49,6 @@ paths:
           description: Authentication error
         '409':
           description: Conflict
-  /customer/put/{id}:
     put:
       tags:
       - customer
@@ -80,10 +79,10 @@ paths:
         description: name of data field and new value
         required: true
 
-  /invoices/post:
+  /invoice:
     post:
       tags:
-        - invoices
+        - invoice
       summary: add new invoice to database
       description: ''
       operationId: swagger_server.controllers.customer_db_functions.post_invoice
@@ -99,15 +98,49 @@ paths:
               $ref: '#/components/schemas/Invoices'
         description: invoice
         required: true
-  /invoices/get:
     get:
       tags:
-        - invoices
+        - invoice
+      summary: retrieve invoice by customer or query id
+      description: ''
+      operationId: swagger_server.controllers.customer_db_functions.get_invoice_detailed
+      parameters:
+        - in: query
+          name: customer_id
+          description: customer id
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: query_id
+          description: query id
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: complete
+          description: get only paid (true) or unpaid (false) invoices
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Invalid input
+        '401':
+          description: Authentication error
+        '409':
+          description: Conflict
+  /invoice/{id}:
+    get:
+      tags:
+        - invoice
       summary: retrieve invoice
       description: ''
       operationId: swagger_server.controllers.customer_db_functions.get_invoice
       parameters:
-        - in: query
+        - in: path
           name: id
           description: invoice id
           required: true
@@ -122,73 +155,9 @@ paths:
           description: Authentication error
         '409':
           description: Conflict
-  /invoices/get_by_customer:
-    get:
-      tags:
-        - invoices
-      summary: retrieve invoices by customer
-      description: ''
-      operationId: swagger_server.controllers.customer_db_functions.get_invoices_by_customer
-      parameters:
-        - in: query
-          name: customer_id
-          description: customer id
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-        '401':
-          description: Authentication error
-        '409':
-          description: Conflict
-  /invoices/get_by_customer_unpaid:
-    get:
-      tags:
-        - invoices
-      summary: retrieve invoices that are marked as unpaid - by customer
-      description: ''
-      operationId: swagger_server.controllers.customer_db_functions.get_invoices_by_customer_open
-      parameters:
-        - in: query
-          name: customer_id
-          description: customer id
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-        '401':
-          description: Authentication error
-        '409':
-            description: Conflict
-  /invoices/get_by_customer_paid:
-    get:
-      tags:
-        - invoices
-      summary: retrieve invoices that are marked as paid - by customer
-      description: ''
-      operationId: swagger_server.controllers.customer_db_functions.get_invoices_by_customer_paid
-      parameters:
-        - in: query
-          name: customer_id
-          description: customer id
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-        '401':
-          description: Authentication error
-        '409':
-          description: Conflict
-  /invoices/put/{id}:
     put:
       tags:
-      - invoices
+      - invoice
       summary: update invoice
       description: ''
       operationId: swagger_server.controllers.customer_db_functions.put_invoice
@@ -215,6 +184,7 @@ paths:
               $ref: '#/components/schemas/Parameter'
         description: name of data field and new value
         required: true
+    
   /query/get_quote:
     get:
       tags:

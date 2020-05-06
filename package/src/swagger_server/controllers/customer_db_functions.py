@@ -71,36 +71,8 @@ def get_invoice(id):
 
 @requires_auth
 @requires_scope('registree', 'recruiter')
-def get_invoice_by_query(query_id):
-    result = invoices.find_one({'query_id': query_id})
-    if result:
-        result['_id'] = str(result['_id'])
-        return result
-    else:
-        return {'ERROR': 'No matching data found.'}, 409
-
-@requires_auth
-@requires_scope('registree', 'recruiter')
-def get_invoices_by_customer(customer_id):
-    result = invoices.find({'customer_id': customer_id})
-    if result:
-        return _stringify_object_id(result)
-    else:
-        return {'ERROR': 'No matching data found.'}, 409
-
-@requires_auth
-@requires_scope('registree', 'recruiter')
-def get_invoices_by_customer_paid(customer_id):
-    result = invoices.find({'customer_id': customer_id, 'payment.complete': 'true'})
-    if result:
-        return _stringify_object_id(result)
-    else:
-        return {'ERROR': 'No matching data found.'}, 409
-    
-@requires_auth
-@requires_scope('registree', 'recruiter')
-def get_invoices_by_customer_open(customer_id):
-    result = invoices.find({'customer_id': customer_id, 'payment.complete': 'false'})
+def get_invoice_detailed(**kwargs):
+    result = invoices.find(kwargs)
     if result:
         return _stringify_object_id(result)
     else:
