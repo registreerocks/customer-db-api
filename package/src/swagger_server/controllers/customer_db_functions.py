@@ -82,9 +82,18 @@ def get_invoice_detailed(**kwargs):
 @requires_scope('registree')
 @check_id
 def put_invoice(id, body):
+    if body.get('field') == 'complete':
+        update = {'complete': body.get('value') == 'True' or body.get('value') == 'true'}
+    elif body.get('field') == 'rsvp':
+        update = {
+            'rsvp': int(body.get('value')),
+            'price.amount': _calculate_quote(int(body.get('value')))
+        }
+    else:
+        update = {body.get('field'): body.get('value')}
     result = invoices.find_one_and_update(
                 {'_id': ObjectId(id)},
-                {'$set':{body.get('field'): body.get('value')}},
+                {'$set': update},
                 return_document=ReturnDocument.AFTER
             )
     if result:
