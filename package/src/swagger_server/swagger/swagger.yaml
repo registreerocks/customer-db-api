@@ -269,7 +269,7 @@ components:
         query_id:
           type: string
         rsvp:
-          type: string
+          type: integer
         complete:
           type: boolean
           default: false
