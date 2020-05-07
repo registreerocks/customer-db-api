@@ -22,18 +22,6 @@ services:
       - mongo.env
     networks:
       - backbone
-
-  nginx:
-    restart: always
-    build: ./nginx
-    links:
-      - customer_db
-    ports:
-      - "2087:2087"
-    volumes:
-      - ~/cert:/etc/cert
-    networks:
-      - backbone
       
 networks: 
   backbone:
