@@ -1,18 +1,20 @@
 import math
 from os import environ as env
 
+import requests
 from bson import ObjectId
 from pymongo import MongoClient, ReturnDocument
-from registree_auth import requires_auth, requires_scope
+from registree_auth import check_user_id, requires_auth, requires_scope
 
 from .helpers import _stringify_object_id, check_id
 from .quotes import _calculate_quote
+from .user import _request_management_token, _update_user
 
 CLIENT = MongoClient(
-  'mongodb://mongodb:27017/', 
-  username=env.get('MONGO_USERNAME'), 
-  password=env.get('MONGO_PASSWORD')
-  )
+    'mongodb://mongodb:27017/', 
+    username=env.get('MONGO_USERNAME'), 
+    password=env.get('MONGO_PASSWORD')
+    )
 DB = CLIENT.database
 customer_details = DB.customer_details
 invoices = DB.invoices
@@ -130,3 +132,18 @@ def get_quote(n):
 @check_id
 def get_price(n):
     return _calculate_quote(n)
+
+
+
+@requires_auth
+@requires_scope('recruiter')
+@check_user_id
+def update_user(id, body):
+    try:
+        access_token = _request_management_token()
+        try:
+            return _update_user(id, body, access_token)
+        except requests.exceptions.HTTPError as e:
+            return {'ERROR': 'Unable to update user. Status code: '+ str(e.response.status_code)}, 400
+    except requests.exceptions.HTTPError as e:
+        return {'ERROR': 'Unable to fetch management access token. Status code: '+ str(e.response.status_code)}, 400
