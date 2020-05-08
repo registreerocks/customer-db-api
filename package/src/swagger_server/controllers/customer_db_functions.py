@@ -52,6 +52,15 @@ def put_customer(id, body):
 
 @requires_auth
 @requires_scope('registree')
+def get_all_customers():
+    result = customer_details.find({})
+    if result:
+        return _stringify_object_id(result)
+    else:
+        return {'ERROR': 'No matching data found.'}, 409
+
+@requires_auth
+@requires_scope('registree')
 def post_invoice(body):
     price = _calculate_quote(body.get('rsvp'))
     body['price'] = {

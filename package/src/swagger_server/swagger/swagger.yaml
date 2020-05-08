@@ -78,7 +78,22 @@ paths:
               $ref: '#/components/schemas/Parameter'
         description: name of data field and new value
         required: true
-
+  /customer/all:
+    get:
+      tags:
+        - customer
+      summary: retrieve all customer details
+      description: ''
+      operationId: swagger_server.controllers.customer_db_functions.get_all_customers
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Invalid input
+        '401':
+          description: Authentication error
+        '409':
+          description: Conflict
   /invoice:
     post:
       tags:
