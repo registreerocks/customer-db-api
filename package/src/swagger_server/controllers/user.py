@@ -23,7 +23,8 @@ def _update_user(user_id, body, token):
   if body.get('field') == 'email':
     data = {
       'email': body.get('value'),
-      'email_verified': False
+      'email_verified': False,
+      'verify_email': True
     }
   else:
     data = {body.get('field'): body.get('value')}
