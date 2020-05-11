@@ -123,15 +123,15 @@ def get_quote(n):
             'value': n
         },
         {
-            'string': 'Total cost of query given a 5% RSVP rate',
+            'string': 'Total cost of query if 5% of students RSVP to attend the event',
             'value': 'R {:,}'.format(_calculate_quote(math.floor(0.05 * n)))
         },
         {
-            'string': 'Total cost of query given a 10% RSVP rate',
+            'string': 'Total cost of query if 10% of students RSVP to attend the event',
             'value': 'R {:,}'.format(_calculate_quote(math.floor(0.1 * n)))
         },
         {
-            'string': 'Total cost of query given a 20% RSVP rate',
+            'string': 'Total cost of query if 20% of students RSVP to attend the event',
             'value': 'R {:,}'.format(_calculate_quote(math.floor(0.2 * n)))
         }
     ]
