@@ -75,7 +75,11 @@ jobs:
       - image: circleci/python:3.7.5
     steps:
       - run:
-          name: Deploy app to Digital Ocean Server via Docker
+          name: Deploy app to Demo Server via Docker
+          command: |
+            ssh -o StrictHostKeyChecking=no root@161.35.25.77 "/bin/bash ./RegistreeUpdate.sh"
+      - run:
+          name: Deploy app to Production Server via Docker
           command: |
             ssh -o StrictHostKeyChecking=no root@167.172.169.36 "/bin/bash ./RegistreeUpdate.sh"
                         
