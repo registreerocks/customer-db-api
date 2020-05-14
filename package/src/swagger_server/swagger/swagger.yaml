@@ -7,7 +7,7 @@ tags:
   - name: Customer DB
     description: ''
 paths:
-  /customer/post:
+  /customer:
     post:
       tags:
         - customer
@@ -26,7 +26,7 @@ paths:
               $ref: '#/components/schemas/Customer'
         description: customer details
         required: true
-  /customer/get:
+  /customer/{id}:
     get:
       tags:
         - customer
@@ -34,7 +34,7 @@ paths:
       description: ''
       operationId: swagger_server.controllers.customer_db_functions.get_customer
       parameters:
-        - in: query
+        - in: path
           name: id
           description: customer id
           required: true
@@ -49,7 +49,6 @@ paths:
           description: Authentication error
         '409':
           description: Conflict
-  /customer/put/{id}:
     put:
       tags:
       - customer
@@ -79,40 +78,13 @@ paths:
               $ref: '#/components/schemas/Parameter'
         description: name of data field and new value
         required: true
-
-  /payment/post:
-    post:
-      tags:
-        - payment
-      summary: add new payment details to database
-      description: ''
-      operationId: swagger_server.controllers.customer_db_functions.post_payment
-      responses:
-        '200':
-          description: OK
-        '401':
-          description: Authentication error
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Payment'
-        description: payment details
-        required: true
-  /payment/get:
+  /customer/all:
     get:
       tags:
-        - payment
-      summary: retrieve payment details
+        - customer
+      summary: retrieve all customer details
       description: ''
-      operationId: swagger_server.controllers.customer_db_functions.get_payment
-      parameters:
-        - in: query
-          name: id
-          description: payment detail id
-          required: true
-          schema:
-            type: string
+      operationId: swagger_server.controllers.customer_db_functions.get_all_customers
       responses:
         '200':
           description: OK
@@ -122,62 +94,10 @@ paths:
           description: Authentication error
         '409':
           description: Conflict
-  /payment/get_by_customer:
-    get:
-      tags:
-        - payment
-      summary: retrieve payment details by customer
-      description: ''
-      operationId: swagger_server.controllers.customer_db_functions.get_payment_by_customer
-      parameters:
-        - in: query
-          name: customer_id
-          description: customer id
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-        '401':
-          description: Authentication error
-        '409':
-          description: Conflict
-  /payment/put/{id}:
-    put:
-      tags:
-      - payment
-      summary: update payment details
-      description: ''
-      operationId: swagger_server.controllers.customer_db_functions.put_payment
-      parameters:
-      - name: id
-        in: path
-        description: payment id
-        required: true
-        schema:
-          type: string
-      responses:
-        '200':
-          description: OK
-        '400':
-          description: Invalid input
-        '401':
-          description: Authentication error
-        '409':
-          description: Conflict
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Parameter'
-        description: name of data field and new value
-        required: true
-
-  /invoices/post:
+  /invoice:
     post:
       tags:
-        - invoices
+        - invoice
       summary: add new invoice to database
       description: ''
       operationId: swagger_server.controllers.customer_db_functions.post_invoice
@@ -193,15 +113,49 @@ paths:
               $ref: '#/components/schemas/Invoices'
         description: invoice
         required: true
-  /invoices/get:
     get:
       tags:
-        - invoices
+        - invoice
+      summary: retrieve invoice by customer or query id
+      description: ''
+      operationId: swagger_server.controllers.customer_db_functions.get_invoice_detailed
+      parameters:
+        - in: query
+          name: customer_id
+          description: customer id
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: query_id
+          description: query id
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: complete
+          description: get only paid (true) or unpaid (false) invoices
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Invalid input
+        '401':
+          description: Authentication error
+        '409':
+          description: Conflict
+  /invoice/{id}:
+    get:
+      tags:
+        - invoice
       summary: retrieve invoice
       description: ''
       operationId: swagger_server.controllers.customer_db_functions.get_invoice
       parameters:
-        - in: query
+        - in: path
           name: id
           description: invoice id
           required: true
@@ -216,73 +170,9 @@ paths:
           description: Authentication error
         '409':
           description: Conflict
-  /invoices/get_by_customer:
-    get:
-      tags:
-        - invoices
-      summary: retrieve invoices by customer
-      description: ''
-      operationId: swagger_server.controllers.customer_db_functions.get_invoices_by_customer
-      parameters:
-        - in: query
-          name: customer_id
-          description: customer id
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-        '401':
-          description: Authentication error
-        '409':
-          description: Conflict
-  /invoices/get_by_customer_unpaid:
-    get:
-      tags:
-        - invoices
-      summary: retrieve invoices that are marked as unpaid - by customer
-      description: ''
-      operationId: swagger_server.controllers.customer_db_functions.get_invoices_by_customer_open
-      parameters:
-        - in: query
-          name: customer_id
-          description: customer id
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-        '401':
-          description: Authentication error
-        '409':
-            description: Conflict
-  /invoices/get_by_customer_paid:
-    get:
-      tags:
-        - invoices
-      summary: retrieve invoices that are marked as paid - by customer
-      description: ''
-      operationId: swagger_server.controllers.customer_db_functions.get_invoices_by_customer_paid
-      parameters:
-        - in: query
-          name: customer_id
-          description: customer id
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-        '401':
-          description: Authentication error
-        '409':
-          description: Conflict
-  /invoices/put/{id}:
     put:
       tags:
-      - invoices
+      - invoice
       summary: update invoice
       description: ''
       operationId: swagger_server.controllers.customer_db_functions.put_invoice
@@ -309,44 +199,7 @@ paths:
               $ref: '#/components/schemas/Parameter'
         description: name of data field and new value
         required: true
-  /query/post:
-    post:
-      tags:
-        - query
-      summary: store query details
-      description: ''
-      operationId: swagger_server.controllers.customer_db_functions.post_query
-      responses:
-        '200':
-          description: OK
-        '401':
-          description: Authentication error
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Query'
-        description: query object
-        required: true
-  /query/expand:
-    post:
-      tags:
-        - query
-      summary: store expanded query details
-      description: ''
-      operationId: swagger_server.controllers.customer_db_functions.expand_query
-      responses:
-        '200':
-          description: OK
-        '401':
-          description: Authentication error
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Query'
-        description: query object
-        required: true
+    
   /query/get_quote:
     get:
       tags:
@@ -384,7 +237,38 @@ paths:
         '200':
           description: OK
         '401':
-          description: Authentication error      
+          description: Authentication error
+
+  /user/{id}:
+    put:
+      tags:
+        - user
+      summary: update user data
+      description: ''
+      operationId: swagger_server.controllers.customer_db_functions.update_user
+      parameters:
+      - name: id
+        in: path
+        description: user auth0 id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Invalid input
+        '401':
+          description: Authentication error
+        '409':
+          description: Conflict
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Parameter'
+        description: name of data field and new value
+        required: true
 
 servers:
   - url: 'http://localhost:8000'
@@ -395,8 +279,23 @@ components:
       properties:
         name:
           type: string
-        payment_type:
+        description:
           type: string
+        billing_address:
+          type: object
+          properties:
+            line_1:
+              type: string
+            line_2:
+              type: string
+            city:
+              type: string
+            province:
+              type: string
+            zip:
+              type: string
+            country:
+              type: string
         contact:
           type: object
           properties:
@@ -404,48 +303,10 @@ components:
               type: string
             email:
               type: string
-            phone:
-              type: object
-              properties:
-                number: 
-                  type: string
-                country_code:
-                  type: string
+        vat:
+          type: string
       xml:
         name: Customer
-    Payment:
-      type: object
-      properties:
-        customer_id:
-          type: string
-        address:
-          type: object
-          properties:
-            name:
-              type: string
-            street:
-              type: string
-            number:
-              type: string
-            city:
-              type: string
-            zip:
-              type: string
-            state:
-              type: string
-            country: 
-              type: string
-        payment:
-          type: object
-          properties:
-            currency: 
-              type: string
-            frequency:
-              type: string
-            frequency_interval:
-              type: string
-      xml:
-        name: Invoice
     Invoices:
       type: object
       properties:
@@ -453,14 +314,11 @@ components:
           type: string
         query_id:
           type: string
-        payment:
-          type: object
-          properties:
-            currency:
-              type: string
-            complete:
-              type: boolean
-              default: false
+        rsvp:
+          type: integer
+        complete:
+          type: boolean
+          default: false
       xml:
         name: Payment
     Parameter:
@@ -472,61 +330,3 @@ components:
           type: string
       xml:
         name: Parameter
-    Query:
-      type: object
-      properties:
-        id:
-          type: string
-        customer_id:
-          type: string
-        timestamp:
-          type: string
-        event:
-          type: object
-          properties:
-            type:
-              type: string
-            name:
-              type: string
-            address:
-              type: string
-            start_date:
-              type: string
-            end_date:
-              type: string
-            info:
-              type: string
-            flyer:
-              type: string
-            message:
-              type: string
-        query:
-          type: object
-          properties:
-            details:
-              type: array
-              items:
-                type: object
-                properties:
-                  university_id: 
-                    type: string
-                  university_name: 
-                    type: string
-                  faculty_id: 
-                    type: string
-                  faculty_name: 
-                    type: string
-                  degree_id:
-                    type: string
-                  degree_name:
-                    type: string
-                  course_id:
-                    type: string
-                  course_name:
-                    type: string
-                  absolute:
-                    type: integer
-                  percentage:
-                    type: integer
-      xml:
-        name: Query
