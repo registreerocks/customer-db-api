@@ -36,7 +36,7 @@ def get_customer(id):
         return {'ERROR': 'No matching data found.'}, 409
 
 @requires_auth
-@requires_scope('registree')
+@requires_scope('registree', 'recruiter')
 @check_id
 def put_customer(id, body):
     result = customer_details.find_one_and_update(
