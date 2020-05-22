@@ -7,6 +7,7 @@ from pymongo import MongoClient, ReturnDocument
 from registree_auth import check_user_id, requires_auth, requires_scope
 
 from .helpers import _stringify_object_id, check_id
+from .invoice import _update_invoice
 from .quotes import _calculate_quote
 from .user import _request_management_token, _update_user
 
@@ -39,9 +40,10 @@ def get_customer(id):
 @requires_scope('registree', 'recruiter')
 @check_id
 def put_customer(id, body):
+    update = {item.get('field'): item.get('value') for item in body}
     result = customer_details.find_one_and_update(
                 {'_id': ObjectId(id)},
-                {'$set':{body.get('field'): body.get('value')}},
+                {'$set': update},
                 return_document=ReturnDocument.AFTER
             )
     if result:
@@ -93,15 +95,7 @@ def get_invoice_detailed(**kwargs):
 @requires_scope('registree')
 @check_id
 def put_invoice(id, body):
-    if body.get('field') == 'complete':
-        update = {'complete': body.get('value') == 'True' or body.get('value') == 'true'}
-    elif body.get('field') == 'rsvp':
-        update = {
-            'rsvp': int(body.get('value')),
-            'price.amount': _calculate_quote(int(body.get('value')))
-        }
-    else:
-        update = {body.get('field'): body.get('value')}
+    update = _update_invoice(body)
     result = invoices.find_one_and_update(
                 {'_id': ObjectId(id)},
                 {'$set': update},

@@ -20,14 +20,12 @@ def _request_management_token():
   return data.get('access_token')
   
 def _update_user(user_id, body, token):
-  if body.get('field') == 'email':
-    data = {
-      'email': body.get('value'),
-      'email_verified': False,
-      'verify_email': True
-    }
-  else:
-    data = {body.get('field'): body.get('value')}
+  data = {}
+  for item in body:
+    if item.get('field') == 'email':
+      data['email_verified'] = False,
+      data['verify_email'] = True
+    data[item.get('field')] = item.get('value')
 
   url = 'https://' + AUTH0_DOMAIN + '/api/v2/users/' + user_id
   headers = {'Authorization': 'Bearer ' + token}
