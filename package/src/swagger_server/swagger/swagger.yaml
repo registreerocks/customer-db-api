@@ -322,11 +322,13 @@ components:
       xml:
         name: Payment
     Parameter:
-      type: object
-      properties:
-        field:
-          type: string
-        value:
-          type: string
+      type: array
+      items:
+        type: object
+        properties:
+          field:
+            type: string
+          value:
+            type: string
       xml:
         name: Parameter
