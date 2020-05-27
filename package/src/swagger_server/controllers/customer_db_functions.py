@@ -1,4 +1,3 @@
-import math
 from os import environ as env
 
 import requests
@@ -8,7 +7,7 @@ from registree_auth import check_user_id, requires_auth, requires_scope
 
 from .helpers import _stringify_object_id, check_id
 from .invoice import _update_invoice
-from .quotes import _calculate_quote
+from .quotes import _calculate_quote, _quote_info
 from .user import _request_management_token, _update_user
 
 CLIENT = MongoClient(
@@ -111,40 +110,13 @@ def put_invoice(id, body):
 @requires_scope('recruiter')
 @check_id
 def get_quote(n):
-    return [
-        {
-            'string': 'Number of students to be contacted given search criteria',
-            'value': n
-        },
-        {
-            'string': 'Total cost of query if 5% of students RSVP to attend the event',
-            'value': 'R {:,}'.format(_calculate_quote(math.floor(0.05 * n)))
-        },
-        {
-            'string': 'Total cost of query if 10% of students RSVP to attend the event',
-            'value': 'R {:,}'.format(_calculate_quote(math.floor(0.1 * n)))
-        },
-        {
-            'string': 'Total cost of query if 20% of students RSVP to attend the event',
-            'value': 'R {:,}'.format(_calculate_quote(math.floor(0.2 * n)))
-        },
-        {
-            'string': 'Total cost of query if 50% of students RSVP to attend the event',
-            'value': 'R {:,}'.format(_calculate_quote(math.floor(0.5 * n)))
-        },
-        {
-            'string': 'Total cost of query if 100% of students RSVP to attend the event',
-            'value': 'R {:,}'.format(_calculate_quote(n))
-        }
-    ]
+    return _quote_info(n)
 
 @requires_auth
 @requires_scope('registree')
 @check_id
 def get_price(n):
     return _calculate_quote(n)
-
-
 
 @requires_auth
 @requires_scope('recruiter')
