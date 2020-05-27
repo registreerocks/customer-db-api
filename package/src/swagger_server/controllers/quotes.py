@@ -1,3 +1,4 @@
+import math
 from os import environ as env
 
 BASE_RATE = env.get('BASE_RATE', 2500)
@@ -18,6 +19,12 @@ TIERS = [
   env.get('TIER_4', 150),
   env.get('TIER_5', 200)
 ]
+
+def _quote_info(n):
+  return {
+    'numberOfStudents': n,
+    'rsvpCostBreakdown': [{'percent': i, 'cost': _calculate_quote(math.floor((i/100) * n))} for i in [5, 10, 20, 50, 100]]
+  }
 
 
 def _calculate_quote(n):
