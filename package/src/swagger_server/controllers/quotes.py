@@ -40,4 +40,4 @@ def _calculate_quote(n):
   return total
 
 def _bulk_price(body):
-  return {_id : _calculate_quote(n) for _id, n in body.items()}
+  return [{'query_id': item.get('query_id'), 'price': _calculate_quote(item.get('n'))} for item in body]

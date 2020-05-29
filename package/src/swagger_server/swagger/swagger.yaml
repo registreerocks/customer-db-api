@@ -353,11 +353,13 @@ components:
       xml:
         name: Parameter
     BulkPrice:
-      type: object
-      properties:
-        query_id:
-          type: string
-        n:
-          type: integer
+      type: array
+      items:
+        type: object
+        properties:
+          query_id:
+            type: string
+          n:
+            type: integer
       xml:
         name: BulkPrice

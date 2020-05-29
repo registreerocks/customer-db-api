@@ -24,14 +24,28 @@ def test_quote_info():
   assert(_quote_info(70) == expected_output)
 
 def test_bulk_price():
-  body = {
-    '123': 11,
-    '567': 66,
-    '890': 111
-  }
-  expected_output = {
-    '123': 4675,
-    '567': 13900,
-    '890': 20375
-  }
+  body = [
+    {
+      'query_id': '123',
+      'n': 11
+    }, {
+      'query_id': '567',
+      'n': 66
+    }, {
+      'query_id': '890',
+      'n': 111
+    }
+  ]
+  expected_output = [
+    {
+      'query_id': '123',
+      'price': 4675
+    }, {
+      'query_id': '567',
+      'price': 13900
+    }, {
+      'query_id': '890',
+      'price': 20375
+    }
+  ]
   assert(_bulk_price(body) == expected_output)
