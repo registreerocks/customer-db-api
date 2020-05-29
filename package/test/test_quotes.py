@@ -1,4 +1,7 @@
-from src.swagger_server.controllers.quotes import _calculate_quote, _quote_info
+from src.swagger_server.controllers.quotes import (_bulk_price,
+                                                   _calculate_quote,
+                                                   _quote_info)
+
 
 def test_calculate_quote():
   assert(_calculate_quote(8) == 4100)
@@ -19,3 +22,16 @@ def test_quote_info():
     ]
   }
   assert(_quote_info(70) == expected_output)
+
+def test_bulk_price():
+  body = {
+    '123': 11,
+    '567': 66,
+    '890': 111
+  }
+  expected_output = {
+    '123': 4675,
+    '567': 13900,
+    '890': 20375
+  }
+  assert(_bulk_price(body) == expected_output)

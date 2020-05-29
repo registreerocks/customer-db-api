@@ -38,3 +38,6 @@ def _calculate_quote(n):
   if n > TIERS[5]:
     total += (n - TIERS[5]) * TIER_RATES[5]
   return total
+
+def _bulk_price(body):
+  return {_id : _calculate_quote(n) for _id, n in body.items()}

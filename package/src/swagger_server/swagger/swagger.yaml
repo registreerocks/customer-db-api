@@ -223,7 +223,7 @@ paths:
     get:
       tags:
         - query
-      summary: returns array of price overview
+      summary: returns price
       description: ''
       operationId: swagger_server.controllers.customer_db_functions.get_price
       parameters:
@@ -238,7 +238,27 @@ paths:
           description: OK
         '401':
           description: Authentication error
-
+  /query/bulk_get_price:
+    post:
+      tags:
+        - query
+      summary: returns price object
+      description: ''
+      operationId: swagger_server.controllers.customer_db_functions.bulk_get_price
+      
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Authentication error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkPrice'
+        description: query id and number of RSVPs
+        required: true
+        
   /user/{id}:
     put:
       tags:
@@ -332,3 +352,12 @@ components:
             type: string
       xml:
         name: Parameter
+    BulkPrice:
+      type: object
+      properties:
+        query_id:
+          type: string
+        n:
+          type: integer
+      xml:
+        name: BulkPrice

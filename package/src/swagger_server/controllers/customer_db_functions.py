@@ -7,7 +7,7 @@ from registree_auth import check_user_id, requires_auth, requires_scope
 
 from .helpers import _stringify_object_id, check_id
 from .invoice import _update_invoice
-from .quotes import _calculate_quote, _quote_info
+from .quotes import _bulk_price, _calculate_quote, _quote_info
 from .user import _request_management_token, _update_user
 
 CLIENT = MongoClient(
@@ -117,6 +117,12 @@ def get_quote(n):
 @check_id
 def get_price(n):
     return _calculate_quote(n)
+
+@requires_auth
+@requires_scope('registree')
+@check_id
+def bulk_get_price(body):
+    return _bulk_price(body)
 
 @requires_auth
 @requires_scope('recruiter')
