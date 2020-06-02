@@ -119,7 +119,7 @@ def get_price(n):
     return _calculate_quote(n)
 
 @requires_auth
-@requires_scope('registree')
+@requires_scope('registree', 'recruiter')
 @check_id
 def bulk_get_price(body):
     return _bulk_price(body)
