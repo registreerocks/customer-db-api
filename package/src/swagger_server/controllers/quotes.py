@@ -1,3 +1,4 @@
+import math
 from os import environ as env
 
 BASE_RATE = env.get('BASE_RATE', 2500)
@@ -19,6 +20,12 @@ TIERS = [
   env.get('TIER_5', 200)
 ]
 
+def _quote_info(n):
+  return {
+    'numberOfStudents': n,
+    'rsvpCostBreakdown': [{'percent': i, 'cost': _calculate_quote(math.floor((i/100) * n))} for i in [5, 10, 20, 50, 100]]
+  }
+
 
 def _calculate_quote(n):
   total = BASE_RATE
@@ -31,3 +38,6 @@ def _calculate_quote(n):
   if n > TIERS[5]:
     total += (n - TIERS[5]) * TIER_RATES[5]
   return total
+
+def _bulk_price(body):
+  return [{'query_id': item.get('query_id'), 'price': _calculate_quote(item.get('n'))} for item in body]

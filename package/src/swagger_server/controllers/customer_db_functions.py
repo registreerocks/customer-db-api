@@ -1,4 +1,3 @@
-import math
 from os import environ as env
 
 import requests
@@ -7,7 +6,8 @@ from pymongo import MongoClient, ReturnDocument
 from registree_auth import check_user_id, requires_auth, requires_scope
 
 from .helpers import _stringify_object_id, check_id
-from .quotes import _calculate_quote
+from .invoice import _update_invoice
+from .quotes import _bulk_price, _calculate_quote, _quote_info
 from .user import _request_management_token, _update_user
 
 CLIENT = MongoClient(
@@ -36,12 +36,13 @@ def get_customer(id):
         return {'ERROR': 'No matching data found.'}, 409
 
 @requires_auth
-@requires_scope('registree')
+@requires_scope('registree', 'recruiter')
 @check_id
 def put_customer(id, body):
+    update = {item.get('field'): item.get('value') for item in body}
     result = customer_details.find_one_and_update(
                 {'_id': ObjectId(id)},
-                {'$set':{body.get('field'): body.get('value')}},
+                {'$set': update},
                 return_document=ReturnDocument.AFTER
             )
     if result:
@@ -93,15 +94,7 @@ def get_invoice_detailed(**kwargs):
 @requires_scope('registree')
 @check_id
 def put_invoice(id, body):
-    if body.get('field') == 'complete':
-        update = {'complete': body.get('value') == 'True' or body.get('value') == 'true'}
-    elif body.get('field') == 'rsvp':
-        update = {
-            'rsvp': int(body.get('value')),
-            'price.amount': _calculate_quote(int(body.get('value')))
-        }
-    else:
-        update = {body.get('field'): body.get('value')}
+    update = _update_invoice(body)
     result = invoices.find_one_and_update(
                 {'_id': ObjectId(id)},
                 {'$set': update},
@@ -117,32 +110,7 @@ def put_invoice(id, body):
 @requires_scope('recruiter')
 @check_id
 def get_quote(n):
-    return [
-        {
-            'string': 'Number of students to be contacted given search criteria',
-            'value': n
-        },
-        {
-            'string': 'Total cost of query if 5% of students RSVP to attend the event',
-            'value': 'R {:,}'.format(_calculate_quote(math.floor(0.05 * n)))
-        },
-        {
-            'string': 'Total cost of query if 10% of students RSVP to attend the event',
-            'value': 'R {:,}'.format(_calculate_quote(math.floor(0.1 * n)))
-        },
-        {
-            'string': 'Total cost of query if 20% of students RSVP to attend the event',
-            'value': 'R {:,}'.format(_calculate_quote(math.floor(0.2 * n)))
-        },
-        {
-            'string': 'Total cost of query if 50% of students RSVP to attend the event',
-            'value': 'R {:,}'.format(_calculate_quote(math.floor(0.5 * n)))
-        },
-        {
-            'string': 'Total cost of query if 100% of students RSVP to attend the event',
-            'value': 'R {:,}'.format(_calculate_quote(n))
-        }
-    ]
+    return _quote_info(n)
 
 @requires_auth
 @requires_scope('registree')
@@ -150,7 +118,11 @@ def get_quote(n):
 def get_price(n):
     return _calculate_quote(n)
 
-
+@requires_auth
+@requires_scope('registree', 'recruiter')
+@check_id
+def bulk_get_price(body):
+    return _bulk_price(body)
 
 @requires_auth
 @requires_scope('recruiter')
